@@ -42,6 +42,75 @@ test_loader = DataLoader(
 
 print(len(test_dataset))
 
+class ResNet(torch.nn.Module):
+    def __init__(self):
+        super(ResNet, self).__init__()
+
+        self.activation = nn.ReLU()
+
+        self.conv1 = nn.Conv2d(in_channels=3, 
+                               out_channels=12, 
+                               kernel_size=5, 
+                               padding="same")
+        
+        self.conv2 = nn.Conv2d(in_channels=12, 
+                               out_channels=12, 
+                               kernel_size=5, 
+                               padding="same")
+        
+        self.conv3 = nn.Conv2d(in_channels=12, 
+                               out_channels=12, 
+                               kernel_size=5, 
+                               padding="same")
+        
+        self.conv4 = nn.Conv2d(in_channels=12, 
+                               out_channels=12, 
+                               kernel_size=5, 
+                               padding="same")
+        
+        self.conv5 = nn.Conv2d(in_channels=12, 
+                               out_channels=12, 
+                               kernel_size=5, 
+                               padding="same")
+        
+        
+        self.lin1 = nn.Linear(12 * 16 * 16, 1024)
+        self.lin2 = nn.Linear(1024, 10)
+
+    def forward(self, x):
+        output = self.conv1(x)
+        output = self.activation(output)
+        output = nn.MaxPool2d(kernel_size=(2, 2))(output)
+
+        skip = output
+        
+        
+        output = self.conv2(output)
+        output = self.activation(output)
+
+        output = self.conv3(output)
+        output += skip
+        skip = output
+        output = self.activation(output)
+        
+        
+        output = self.conv4(output)
+        output = self.activation(output)
+
+        output = self.conv5(output)
+        output += skip
+        skip = output
+        output = self.activation(output)
+
+
+        output = nn.Flatten()(output)
+        output = self.lin1(output)
+        output = self.activation(output)
+        output = self.lin2(output)
+
+        return output
+
+
 dev = torch.device("mps")
 model = torch.load(f="model.pt").to(dev)
 pytorch_total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -60,7 +129,7 @@ for inputs, targets in iter(test_loader):
             img = torchvision.transforms.ToPILImage()(inputs[i])
             # plt.imshow(img)
             # plt.title(f"Real: {labels[int(targets[i])]};  NN: {labels[int(torch.argmax(outputs[i]))]}")
-            #plt.show()
+            # plt.show()
         all += 1
 
 print(good / all)
