@@ -23,7 +23,8 @@ labels = {
 }
 
 transform = torchvision.transforms.Compose([
-    torchvision.transforms.ToTensor()
+    torchvision.transforms.ToTensor(),
+    torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
 test_dataset = torchvision.datasets.CIFAR10(
@@ -43,7 +44,8 @@ print(len(test_dataset))
 
 dev = torch.device("mps")
 model = torch.load(f="model.pt").to(dev)
-
+pytorch_total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+print(pytorch_total_params)
 good = 0
 all = 0
 
@@ -53,6 +55,12 @@ for inputs, targets in iter(test_loader):
     for i in range(len(outputs)):
         if torch.argmax(outputs[i]) == targets[i]:
             good += 1
+        
+        else:
+            img = torchvision.transforms.ToPILImage()(inputs[i])
+            # plt.imshow(img)
+            # plt.title(f"Real: {labels[int(targets[i])]};  NN: {labels[int(torch.argmax(outputs[i]))]}")
+            #plt.show()
         all += 1
 
 print(good / all)

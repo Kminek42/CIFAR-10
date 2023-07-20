@@ -10,7 +10,8 @@ import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
 transform = torchvision.transforms.Compose([
-    torchvision.transforms.ToTensor()
+    torchvision.transforms.ToTensor(),
+    torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
     
 train_dataset = torchvision.datasets.CIFAR10(
@@ -30,21 +31,31 @@ print(len(train_dataset))
 
 dev = torch.device("mps")
 model = nn.Sequential(
-    nn.Conv2d(3, 12, kernel_size=5, padding="same"),
+    nn.Conv2d(3, 12, kernel_size=(5, 5), padding="same"),
     nn.ReLU(),
     nn.AvgPool2d(kernel_size=2),
 
-    nn.Conv2d(12, 48, kernel_size=5, padding="same"),
+    nn.Conv2d(12, 48, kernel_size=(5, 5), padding="same"),
     nn.ReLU(),
-    nn.AvgPool2d(kernel_size=2),
+    nn.Conv2d(48, 48, kernel_size=(5, 5), padding="same"),
+    nn.ReLU(),
+    nn.Conv2d(48, 48, kernel_size=(5, 5), padding="same"),
+    nn.ReLU(),
+    nn.Conv2d(48, 48, kernel_size=(5, 5), padding="same"),
+    nn.ReLU(),
+    nn.AvgPool2d(kernel_size=(2, 2)),
 
     nn.Flatten(),
-    nn.Linear(48 * 8 * 8, 1024),
+    nn.Linear(48 * 8 * 8, 2048),
     nn.ReLU(),
-    nn.Linear(1024, 512),
+    nn.Dropout(),
+    nn.Linear(2048, 1024),
     nn.ReLU(),
-    nn.Linear(512, 10)
+    nn.Dropout(),
+    nn.Linear(1024, 10)
 ).to(dev)
+
+# model = torch.load(f="model.pt").to(dev)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=1e-2, momentum=0.9)
