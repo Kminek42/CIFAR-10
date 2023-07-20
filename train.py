@@ -12,7 +12,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 transform = torchvision.transforms.Compose([
     torchvision.transforms.ToTensor(),
-    torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    torchvision.transforms.Normalize((0.0, 0.0, 0.0), (1.0, 1.0, 1.0))
 ])
     
 train_dataset = torchvision.datasets.CIFAR10(

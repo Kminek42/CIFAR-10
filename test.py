@@ -25,7 +25,7 @@ labels = {
 
 transform = torchvision.transforms.Compose([
     torchvision.transforms.ToTensor(),
-    torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    torchvision.transforms.Normalize((0.0, 0.0, 0.0), (1.0, 1.0, 1.0))
 ])
 
 test_dataset = torchvision.datasets.CIFAR10(

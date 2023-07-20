@@ -35,20 +35,37 @@ class ResNet(nn.Module):
                                kernel_size=5, 
                                padding="same")
         
-        self.block1 = ResNetBlock(12)
-        self.block2 = ResNetBlock(12)
-        self.block3 = ResNetBlock(12)
-        self.block4 = ResNetBlock(12)
-        self.block5 = ResNetBlock(12)
-        self.block6 = ResNetBlock(12)
-        self.block7 = ResNetBlock(12)
-        self.block8 = ResNetBlock(12)
+        self.conv2 = nn.Conv2d(in_channels=12, 
+                               out_channels=48, 
+                               kernel_size=5, 
+                               padding="same")
         
-        self.lin1 = nn.Linear(12 * 16 * 16, 1024)
+        self.block1 = ResNetBlock(48)
+        self.block2 = ResNetBlock(48)
+        self.block3 = ResNetBlock(48)
+        self.block4 = ResNetBlock(48)
+        self.block5 = ResNetBlock(48)
+        self.block6 = ResNetBlock(48)
+        self.block7 = ResNetBlock(48)
+        self.block8 = ResNetBlock(48)
+        self.block9 = ResNetBlock(48)
+        self.block10 = ResNetBlock(48)
+        self.block11 = ResNetBlock(48)
+        self.block48 = ResNetBlock(48)
+        self.block13 = ResNetBlock(48)
+        self.block14 = ResNetBlock(48)
+        self.block15 = ResNetBlock(48)
+        self.block16 = ResNetBlock(48)
+        
+        self.lin1 = nn.Linear(48 * 8 * 8, 1024)
         self.lin2 = nn.Linear(1024, 10)
 
     def forward(self, x):
         output = self.conv1(x)
+        output = self.activation(output)
+        output = nn.MaxPool2d(kernel_size=(2, 2))(output)
+
+        output = self.conv2(output)
         output = self.activation(output)
         output = nn.MaxPool2d(kernel_size=(2, 2))(output)
 
