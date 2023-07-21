@@ -16,8 +16,10 @@ class ResNetBlock(nn.Module):
         
     def forward(self, x):
         skip = x
+        # x = nn.Dropout2d()(x)
         x = self.conv1(x)
         x = nn.ReLU()(x)
+        # x = nn.Dropout2d()(x)
         x = self.conv2(x)
         x += skip
         x = nn.ReLU()(x)
@@ -51,7 +53,7 @@ class ResNet(nn.Module):
         self.block9 = ResNetBlock(48)
         self.block10 = ResNetBlock(48)
         self.block11 = ResNetBlock(48)
-        self.block48 = ResNetBlock(48)
+        self.block12 = ResNetBlock(48)
         self.block13 = ResNetBlock(48)
         self.block14 = ResNetBlock(48)
         self.block15 = ResNetBlock(48)
@@ -77,6 +79,14 @@ class ResNet(nn.Module):
         output = self.block6.forward(output)
         output = self.block7.forward(output)
         output = self.block8.forward(output)
+        output = self.block9.forward(output)
+        output = self.block10.forward(output)
+        output = self.block11.forward(output)
+        output = self.block12.forward(output)
+        output = self.block13.forward(output)
+        output = self.block14.forward(output)
+        output = self.block15.forward(output)
+        output = self.block16.forward(output)
 
         output = nn.Flatten()(output)
         output = self.lin1(output)

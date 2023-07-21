@@ -12,7 +12,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 transform = torchvision.transforms.Compose([
     torchvision.transforms.ToTensor(),
-    torchvision.transforms.Normalize((0.0, 0.0, 0.0), (1.0, 1.0, 1.0))
+    torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
     
 train_dataset = torchvision.datasets.CIFAR10(
@@ -33,10 +33,10 @@ print(len(train_dataset))
 dev = torch.device("mps")
 
 model = mc.ResNet().to(dev)
-# model = torch.load(f="model.pt").to(dev)
+model = torch.load(f="model.pt").to(dev)
 
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-2, momentum=0.9)
+optimizer = torch.optim.SGD(model.parameters(), lr=4e-3, momentum=0.9)
 
 epoch_n = 10
 t0 = time.time()
