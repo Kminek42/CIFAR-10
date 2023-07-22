@@ -43,7 +43,7 @@ print(len(train_dataset))
 dev = torch.device("mps")
 
 model = mc.ResNet().to(dev)
-model = torch.load(f="model.pt").to(dev)
+# model = torch.load(f="model.pt").to(dev)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=4e-3, momentum=0.9)
