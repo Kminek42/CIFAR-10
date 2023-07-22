@@ -16,10 +16,8 @@ class ResNetBlock(nn.Module):
         
     def forward(self, x):
         skip = x
-        # x = nn.Dropout2d()(x)
         x = self.conv1(x)
         x = nn.ReLU()(x)
-        # x = nn.Dropout2d()(x)
         x = self.conv2(x)
         x += skip
         x = nn.ReLU()(x)

@@ -12,6 +12,8 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 transform = torchvision.transforms.Compose([
     torchvision.transforms.ToTensor(),
+    torchvision.transforms.RandomCrop(size=32, padding=6),
+    torchvision.transforms.RandomHorizontalFlip(),
     torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
     
@@ -29,6 +31,14 @@ train_loader = DataLoader(
 )
 
 print(len(train_dataset))
+# i = 0
+# while 2137:
+#     img, lab = train_dataset[i]
+#     print(img)
+#     img = torchvision.transforms.ToPILImage()(img)
+#     plt.imshow(img)
+#     plt.show()
+#     i += 1
 
 dev = torch.device("mps")
 
@@ -38,7 +48,7 @@ model = torch.load(f="model.pt").to(dev)
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=4e-3, momentum=0.9)
 
-epoch_n = 10
+epoch_n = 30
 t0 = time.time()
 for epoch in range(1, epoch_n + 1):
     loss_sum = 0
