@@ -84,7 +84,7 @@ if train:
     shuffle=True
     )
 
-    dev = torch.device("cuda")
+    dev = torch.device("mps")
 
     model = mc.ResNet().to(dev)
     try:
