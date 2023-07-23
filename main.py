@@ -1,8 +1,7 @@
 import torch
 import torch.nn as nn
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 import torchvision
-import matplotlib.pyplot as plt
 import learning_time_estimation as lte
 import time
 import model_class as mc
@@ -16,7 +15,7 @@ def prepare_dataset(*, training):
             torchvision.transforms.ToTensor(),
             torchvision.transforms.RandomCrop(size=32, padding=6),
             torchvision.transforms.RandomHorizontalFlip(),
-            torchvision.transforms.Normalize((0.0, 0.0, 0.0), (1.0, 1.0, 1.0))
+            torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.25, 0.25, 0.25))
         ])
 
         train_dataset = torchvision.datasets.CIFAR10(
@@ -35,7 +34,7 @@ def prepare_dataset(*, training):
     else:
         transform = torchvision.transforms.Compose([
             torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize((0.0, 0.0, 0.0), (1.0, 1.0, 1.0))
+            torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.25, 0.25, 0.25))
         ])
 
         test_dataset = torchvision.datasets.CIFAR10(
@@ -45,7 +44,7 @@ def prepare_dataset(*, training):
             transform=transform
         )
 
-        print(len(test_dataset))
+        print("Test dataset length:", len(test_dataset))
 
         return test_dataset
 
@@ -98,7 +97,7 @@ if train:
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
-    epoch_n = 10
+    epoch_n = 20
     t0 = time.time()
 
     for epoch in range(1, epoch_n + 1):
@@ -135,7 +134,7 @@ else:
         shuffle=False
     )
     print(len(test_dataset))
-    dev = torch.device("mps")
+    dev = torch.device("cuda")
     model = torch.load(f="model.pt").to(dev)
 
     result = validate(model=model, loader=test_loader, dev=dev)
