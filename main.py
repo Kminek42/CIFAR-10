@@ -68,7 +68,7 @@ def validate(*, model, loader, dev):
 
     return (good / all)
 
-train = False
+train = True
 
 if train:
     train_dataset, validate_dataset = prepare_dataset(training=True)
@@ -85,14 +85,18 @@ if train:
     shuffle=True
     )
 
-    dev = torch.device("mps")
+    dev = torch.device("cuda")
 
     model = mc.ResNet().to(dev)
-    model = torch.load(f="model.pt").to(dev)
+    try:
+        model = torch.load(f="model.pt").to(dev)
+    except:
+        pass
+
     print(model)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
 
     epoch_n = 10
     t0 = time.time()
