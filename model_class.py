@@ -30,14 +30,15 @@ class ResNet(nn.Module):
 
         self.activation = nn.ReLU()
 
-        self.conv1 = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3)
-        self.conv2 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3)
-        self.conv3 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=3)
-        self.conv4 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=3)
-        self.conv5 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=3)
-        self.conv6 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=3)
-        self.conv7 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=3)
-        self.conv8 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=3)
+        self.conv1 = nn.Conv2d(in_channels=3, out_channels=64, kernel_size=3, padding="same")
+        self.conv2 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, padding="same")
+
+        self.block1 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
+        self.block2 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
+        self.block3 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
+        self.block4 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
+        self.block5 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
+        self.block6 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
         
         self.lin1 = nn.Linear(128 * 8 * 8, 1024)
         self.lin2 = nn.Linear(1024, 10)
@@ -47,13 +48,15 @@ class ResNet(nn.Module):
         output = self.activation(output)
         output = self.conv2(output)
         output = self.activation(output)
+        
+        output = nn.MaxPool2d(kernel_size=(2, 2))(output)
 
-        output = self.conv3(output)
-        output = self.conv4(output)
-        output = self.conv5(output)
-        output = self.conv6(output)
-        output = self.conv7(output)
-        output = self.conv8(output)
+        output = self.block1(output)
+        output = self.block2(output)
+        output = self.block3(output)
+        output = self.block4(output)
+        output = self.block5(output)
+        output = self.block6(output)
 
         output = nn.MaxPool2d(kernel_size=(2, 2))(output)
         output = nn.Flatten()(output)

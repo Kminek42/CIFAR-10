@@ -67,7 +67,7 @@ def validate(*, model, loader, dev):
 
     return (good / all)
 
-train = True
+train = False
 
 if train:
     train_dataset, validate_dataset = prepare_dataset(training=True)
@@ -134,7 +134,7 @@ else:
         shuffle=False
     )
     print(len(test_dataset))
-    dev = torch.device("cuda")
+    dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps")
     model = torch.load(f="model.pt").to(dev)
 
     result = validate(model=model, loader=test_loader, dev=dev)
