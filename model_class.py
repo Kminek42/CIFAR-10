@@ -34,6 +34,10 @@ class ResNet(nn.Module):
         self.conv2 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=5, padding="same")
         self.conv3 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=5, padding="same")
         self.conv4 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=5, padding="same")
+        self.conv5 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=5, padding="same")
+        self.conv6 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=5, padding="same")
+        self.conv7 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=5, padding="same")
+        self.conv8 = nn.Conv2d(in_channels=128, out_channels=128, kernel_size=5, padding="same")
         
         self.lin1 = nn.Linear(128 * 8 * 8, 1024)
         self.lin2 = nn.Linear(1024, 10)
@@ -47,10 +51,14 @@ class ResNet(nn.Module):
         output = nn.MaxPool2d(kernel_size=(2, 2))(output)
 
         output = self.conv3(output)
+        output = self.conv4(output)
+        output = self.conv5(output)
 
         output = nn.MaxPool2d(kernel_size=(2, 2))(output)
 
-        output = self.conv4(output)
+        output = self.conv6(output)
+        output = self.conv7(output)
+        output = self.conv8(output)
 
         output = nn.Flatten()(output)
         output = self.lin1(output)
