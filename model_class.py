@@ -39,6 +39,13 @@ class ResNet(nn.Module):
         self.block4 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
         self.block5 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
         self.block6 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
+
+        self.block7 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
+        self.block8 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
+        self.block9 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
+        self.block10 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
+        self.block11 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
+        self.block12 = ResNetBlock(channels_in=128, channels_out=128, kernel=3)
         
         self.lin1 = nn.Linear(128 * 8 * 8, 1024)
         self.lin2 = nn.Linear(1024, 10)
@@ -57,6 +64,13 @@ class ResNet(nn.Module):
         output = self.block4(output)
         output = self.block5(output)
         output = self.block6(output)
+
+        output = self.block7(output)
+        output = self.block8(output)
+        output = self.block9(output)
+        output = self.block10(output)
+        output = self.block11(output)
+        output = self.block12(output)
 
         output = nn.MaxPool2d(kernel_size=(2, 2))(output)
         output = nn.Flatten()(output)
