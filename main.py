@@ -89,7 +89,7 @@ if train:
     print(model)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
     epoch_n = 20
     t0 = time.time()
