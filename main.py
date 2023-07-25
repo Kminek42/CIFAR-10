@@ -67,8 +67,8 @@ def validate(*, model, loader, dev):
 
     return (good / all)
 
+dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps")
 train = False
-
 if train:
     train_dataset, validate_dataset = prepare_dataset(training=True)
 
@@ -84,13 +84,7 @@ if train:
     shuffle=True
     )
 
-    dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps")
-
     model = mc.ResNet().to(dev)
-    try:
-        model = torch.load(f="model.pt").to(dev)
-    except:
-        pass
 
     print(model)
 
@@ -134,7 +128,6 @@ else:
         shuffle=False
     )
     print(len(test_dataset))
-    dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps")
     model = torch.load(f="model.pt").to(dev)
 
     result = validate(model=model, loader=test_loader, dev=dev)
